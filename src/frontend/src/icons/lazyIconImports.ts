@@ -32,7 +32,8 @@ export const lazyIconsMapping = {
   Azure: () =>
     import("@/icons/Azure").then((mod) => ({ default: mod.AzureIcon })),
   Bing: () => import("@/icons/Bing").then((mod) => ({ default: mod.BingIcon })),
-  BrightData: () => import("@/icons/BrightData").then((module) => module.BrightDataIcon),
+  BrightData: () => 
+    import("@/icons/BrightData").then((module) => module.BrightDataIcon),
   BotMessageSquareIcon: () =>
     import("@/icons/BotMessageSquare").then((mod) => ({
       default: mod.BotMessageSquareIcon,

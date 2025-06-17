@@ -102,6 +102,8 @@ class BrightDataWebScraperComponent(Component):
             
             if self.output_format == "markdown":
                 payload['data_format'] = 'markdown'
+            elif self.output_format == "html":
+                payload["data_format"] = "html"
             
             timeout = int(self.timeout)
             

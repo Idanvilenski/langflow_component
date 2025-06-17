@@ -1017,7 +1017,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                                 "dataset_category": dataset_config["category"],
                                 "dataset_id": dataset_id,
                                 "snapshot_id": snapshot_id,
-                                "status": "success",
+                                "status": status,
                                 "collection_time_seconds": round(time.time() - start_time, 2),
                                 "attempts": attempts,
                                 "auto_detected": self.auto_detect,

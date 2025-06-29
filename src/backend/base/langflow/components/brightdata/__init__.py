@@ -4,6 +4,6 @@ from .brightdata_web_scraper import BrightDataWebScraperComponent
 
 __all__ = [
     "BrightDataSearchEngineComponent",
-    "BrightDataStructuredDataEnhancedComponent", 
+    "BrightDataStructuredDataEnhancedComponent",
     "BrightDataWebScraperComponent",
 ]

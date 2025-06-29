@@ -25,6 +25,7 @@ import { ConfluenceIcon } from "@/icons/Confluence";
 import { CouchbaseIcon } from "@/icons/Couchbase";
 import { CrewAiIcon } from "@/icons/CrewAI";
 import { DeepSeekIcon } from "@/icons/DeepSeek";
+import { DoclingIcon } from "@/icons/Docling";
 import { DropboxIcon } from "@/icons/Dropbox";
 import { DuckDuckGoIcon } from "@/icons/DuckDuckGo";
 import { ElasticsearchIcon } from "@/icons/ElasticsearchStore";
@@ -112,6 +113,7 @@ import { WolframIcon } from "@/icons/Wolfram";
 import { XAIIcon } from "@/icons/xAI";
 import { YouTubeSvgIcon as YouTubeIcon } from "@/icons/Youtube";
 import { ZepMemoryIcon } from "@/icons/ZepMemory";
+import { WindsurfIcon } from "./Windsurf";
 
 // Export the eagerly loaded icons map
 export const eagerIconsMapping = {
@@ -143,6 +145,7 @@ export const eagerIconsMapping = {
   Couchbase: CouchbaseIcon,
   CrewAI: CrewAiIcon,
   DeepSeek: DeepSeekIcon,
+  Docling: DoclingIcon,
   Dropbox: DropboxIcon,
   DuckDuckGo: DuckDuckGoIcon,
   ElasticsearchStore: ElasticsearchIcon,
@@ -225,6 +228,7 @@ export const eagerIconsMapping = {
   WatsonxAI: WatsonxAiIcon,
   Weaviate: WeaviateIcon,
   Wikipedia: WikipediaIcon,
+  Windsurf: WindsurfIcon,
   Wolfram: WolframIcon,
   xAI: XAIIcon,
   YouTube: YouTubeIcon,

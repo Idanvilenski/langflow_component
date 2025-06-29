@@ -20,9 +20,11 @@ from langflow.io import (
 )
 from langflow.schema import Data
 
+from .constants import HTTP_OK, MIN_CONFIDENCE_THRESHOLD
+
 
 class BrightDataStructuredDataEnhancedComponent(Component):
-    """Extract structured data from 40+ real-time specialized datasets using AI-powered auto detection."""
+    """Extract structured data from 40+ real-time datasets using AI-powered auto detection."""
 
     display_name: str = "Bright Data Structured Data"
     description: str = "Extract structured data from 40+ real-time specialized datasets using AI-powered auto detection"
@@ -44,7 +46,10 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             name="url_input",
             display_name="🔍 URL Input",
             required=True,
-            info="The webpage URL to extract structured data from - can be connected from another component or entered manually",
+            info=(
+                "The webpage URL to extract structured data from - can be connected "
+                "from another component or entered manually"
+            ),
             tool_mode=True,
             placeholder="https://example.com/page",
         ),
@@ -116,7 +121,11 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             name="additional_params",
             display_name="⚙️ Additional Parameters",
             value="{}",
-            info='Dataset-specific parameters in JSON format\nExamples:\n• {"pages_to_search": "3"}\n• {"num_of_comments": "20", "days_limit": "7"}',
+            info=(
+                "Dataset-specific parameters in JSON format\n"
+                'Examples:\n• {"pages_to_search": "3"}\n'
+                '• {"num_of_comments": "20", "days_limit": "7"}'
+            ),
             placeholder='{"pages_to_search": "2", "num_of_comments": "10"}',
             advanced=True,
         ),
@@ -135,7 +144,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
     ]
 
     def _get_all_datasets(self) -> dict[str, dict[str, Any]]:
-        """Get all available datasets with enhanced configurations and detection patterns"""
+        """Get all available datasets with enhanced configurations and detection patterns."""
         return {
             "amazon_product": {
                 "dataset_id": "gd_l7q7dkf244hwjntr0",
@@ -695,7 +704,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         }
 
     def _detect_website_type(self, url: str) -> tuple[str | None, int, dict[str, Any]]:
-        """Enhanced auto-detection with detailed scoring and confidence analysis"""
+        """Enhanced auto-detection with detailed scoring and confidence analysis."""
         parsed_url = urlparse(url.lower())
         domain = parsed_url.netloc.replace("www.", "").replace("m.", "")
         path = parsed_url.path
@@ -773,7 +782,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             "detection_method": "enhanced_ai_scoring",
         }
 
-        if all_scores and all_scores[0]["total_score"] >= 15:
+        if all_scores and all_scores[0]["total_score"] >= MIN_CONFIDENCE_THRESHOLD:
             best_match = all_scores[0]
             logger.info(f"Auto-detected dataset: {best_match['dataset']} (confidence: {best_match['total_score']})")
             return best_match["dataset"], best_match["total_score"], detection_details
@@ -782,7 +791,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         return None, 0, detection_details
 
     def _calculate_specificity_bonus(self, dataset_name: str, url: str, domain: str, path: str, query: str) -> int:
-        """Calculate specificity bonus based on precise pattern matching"""
+        """Calculate specificity bonus based on precise pattern matching."""
         bonus = 0
         url_lower = url.lower()
 
@@ -812,9 +821,9 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         elif "youtube.com" in domain:
             if dataset_name == "youtube_videos" and "/watch?v=" in url_lower:
                 bonus += 25
-            elif dataset_name == "youtube_profiles":
-                if "/channel/" in path or "/c/" in path or re.search(r"/@[^/]+/?$", path):
-                    bonus += 20
+            elif (dataset_name == "youtube_profiles" and
+                ("/channel/" in path or "/c/" in path or re.search(r"/@[^/]+/?$", path))):
+                bonus += 20
 
         # Instagram specific bonuses
         elif "instagram.com" in domain:
@@ -822,9 +831,9 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                 dataset_name == "instagram_reels" and "/reel/" in path
             ):
                 bonus += 20
-            elif dataset_name == "instagram_profiles" and re.search(r"/[^/]+/?$", path):
-                if "/p/" not in path and "/reel/" not in path:
-                    bonus += 15
+            elif (dataset_name == "instagram_profiles" and re.search(r"/[^/]+/?$", path) and
+                "/p/" not in path and "/reel/" not in path):
+                bonus += 15
 
         # TikTok specific bonuses
         elif "tiktok.com" in domain:
@@ -858,7 +867,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         return bonus
 
     def get_url_from_input(self) -> str:
-        """Extract URL from the input, handling both Message and string types"""
+        """Extract URL from the input, handling both Message and string types."""
         # Langflow automatically converts inputs to appropriate types
         # We just need to handle Message vs string cases
         if hasattr(self.url_input, "text"):
@@ -868,7 +877,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         return str(self.url_input or "").strip()
 
     def _prepare_dataset_payload(self, data_type: str, url: str, additional_params: dict[str, Any]) -> dict[str, Any]:
-        """Prepare payload for dataset based on its input requirements"""
+        """Prepare payload for dataset based on its input requirements."""
         datasets = self._get_all_datasets()
         config = datasets.get(data_type, {})
 
@@ -885,7 +894,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         return payload
 
     def extract_structured_data(self) -> Data:
-        """Extract structured data using Bright Data's datasets API with enhanced error handling"""
+        """Extract structured data using Bright Data's datasets API with enhanced error handling."""
         # Validate inputs
         if not self.api_token:
             msg = "API token is required"
@@ -955,7 +964,8 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             trigger_payload = [payload]
 
             logger.info(
-                f"Triggering data collection for dataset {dataset_id} ({dataset_config['display_name']}) with payload: {payload}"
+                f"Triggering data collection for dataset {dataset_id} "
+                f"({dataset_config['display_name']}) with payload: {payload}"
             )
 
             # Trigger data collection
@@ -967,7 +977,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                 timeout=30,
             )
 
-            if trigger_response.status_code != 200:
+            if trigger_response.status_code != HTTP_OK:
                 error_msg = (
                     f"Failed to trigger collection: HTTP {trigger_response.status_code} - {trigger_response.text}"
                 )
@@ -980,7 +990,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             except json.JSONDecodeError as e:
                 error_msg = f"Failed to parse trigger response as JSON: {e!s}"
                 logger.error(error_msg)
-                raise ValueError(error_msg)
+                raise ValueError(error_msg) from e
 
             # Handle response format - could be dict or list
             snapshot_id = None
@@ -994,7 +1004,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                 else:
                     error_msg = f"Expected dict in trigger response list, got {type(first_item)}"
                     logger.error(error_msg)
-                    raise ValueError(error_msg)
+                    raise TypeError(error_msg)
             else:
                 error_msg = f"Unexpected trigger response format: {type(trigger_data)}"
                 logger.error(error_msg)
@@ -1022,7 +1032,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                         timeout=30,
                     )
 
-                    if snapshot_response.status_code == 200:
+                    if snapshot_response.status_code == HTTP_OK:
                         try:
                             snapshot_data = snapshot_response.json()
                         except json.JSONDecodeError as e:
@@ -1103,7 +1113,7 @@ class BrightDataStructuredDataEnhancedComponent(Component):
             raise ValueError(error_msg) from e
 
     def get_detection_info(self) -> Data:
-        """Get detailed information about the auto-detection process"""
+        """Get detailed information about the auto-detection process."""
         if not self.auto_detect:
             return Data(
                 data={
@@ -1140,13 +1150,13 @@ class BrightDataStructuredDataEnhancedComponent(Component):
 
             return Data(data=analysis_data)
 
-        except Exception as e:
+        except (ValueError, KeyError, TypeError) as e:
             logger.error(f"Error generating detection info: {e!s}")
             return Data(data={"error": str(e), "auto_detect_enabled": True, "detection_successful": False})
 
     def _get_supported_domains(self) -> list[str]:
-        """Get list of all supported domains"""
+        """Get list of all supported domains."""
         domains = set()
         for config in self._get_all_datasets().values():
             domains.update(config.get("domains", []))
-        return sorted(list(domains))
+        return sorted(domains)

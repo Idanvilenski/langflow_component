@@ -6,6 +6,8 @@ from langflow.inputs import DropdownInput, MessageTextInput, SecretStrInput, Str
 from langflow.schema import Data
 from langflow.template import Output
 
+from .constants import HTTP_OK
+
 
 class BrightDataWebScraperComponent(Component):
     """Scrape the web with bot detection bypass and unlocking tools powered by Bright Data."""
@@ -62,9 +64,7 @@ class BrightDataWebScraperComponent(Component):
     ]
 
     def get_url_from_input(self) -> str:
-        """Extract URL from the input, handling both Message and string types"""
-        # Langflow automatically converts inputs to appropriate types
-        # We just need to handle Message vs string cases
+        """Extract URL from the input, handling both Message and string types."""
         if hasattr(self.url_input, "text"):
             # It's a Message object
             return str(self.url_input.text).strip()
@@ -72,7 +72,7 @@ class BrightDataWebScraperComponent(Component):
         return str(self.url_input or "").strip()
 
     def scrape_content(self) -> Data:
-        """Scrape content from the specified URL using Bright Data"""
+        """Scrape content from the specified URL using Bright Data."""
         try:
             url = self.get_url_from_input()
 
@@ -107,7 +107,7 @@ class BrightDataWebScraperComponent(Component):
                 "https://api.brightdata.com/request", json=payload, headers=headers, timeout=timeout
             )
 
-            if response.status_code == 200:
+            if response.status_code == HTTP_OK:
                 content = response.text
 
                 # Store metadata for other outputs
@@ -127,7 +127,7 @@ class BrightDataWebScraperComponent(Component):
             try:
                 error_detail = response.json()
                 error_msg += f" - {error_detail}"
-            except Exception:
+            except (ValueError, KeyError, TypeError):
                 error_msg += f" - {response.text}"
 
             self._scraped_url = url
@@ -141,22 +141,22 @@ class BrightDataWebScraperComponent(Component):
         except requests.exceptions.ConnectionError:
             error_msg = "Connection error - please check your internet connection"
             return self._create_error_data(url if "url" in locals() else "unknown", error_msg)
-        except Exception as e:
+        except requests.RequestException as e:
             error_msg = f"Exception occurred while scraping: {e!s}"
             return self._create_error_data(url if "url" in locals() else "unknown", error_msg)
 
     def _create_error_data(self, url: str, error_msg: str) -> Data:
-        """Helper method to create error data"""
+        """Helper method to create error data."""
         self._scraped_url = url
         self._metadata = {"url": url, "status": "error", "error": error_msg}
         return Data(text=error_msg, data=self._metadata)
 
     def get_url(self) -> Data:
-        """Return the URL that was used for scraping"""
+        """Return the URL that was used for scraping."""
         url = getattr(self, "_scraped_url", self.get_url_from_input())
         return Data(text=url)
 
     def get_metadata(self) -> Data:
-        """Return metadata about the scraping operation"""
+        """Return metadata about the scraping operation."""
         metadata = getattr(self, "_metadata", {"url": self.get_url_from_input(), "status": "not_executed"})
         return Data(data=metadata)

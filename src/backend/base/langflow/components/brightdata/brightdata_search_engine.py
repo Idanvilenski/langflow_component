@@ -8,6 +8,8 @@ from langflow.inputs import DropdownInput, MessageTextInput, SecretStrInput
 from langflow.schema import Data
 from langflow.template import Output
 
+from .constants import HTTP_OK
+
 
 class BrightDataSearchEngineComponent(Component):
     """Search Google, Bing, or Yandex using Bright Data's search scraping service."""
@@ -48,7 +50,7 @@ class BrightDataSearchEngineComponent(Component):
     ]
 
     def _build_search_url(self, engine: str, query: str) -> str:
-        """Build the search URL for the specified engine"""
+        """Build the search URL for the specified engine."""
         encoded_query = urllib.parse.quote(query)
 
         if engine == "yandex":
@@ -59,7 +61,7 @@ class BrightDataSearchEngineComponent(Component):
         return f"https://www.google.com/search?q={encoded_query}"
 
     def get_query_from_input(self) -> str:
-        """Extract query from the input, handling both Message and string types"""
+        """Extract query from the input, handling both Message and string types."""
         # Langflow automatically converts inputs to appropriate types
         # We just need to handle Message vs string cases
         if hasattr(self.query_input, "text"):
@@ -69,7 +71,7 @@ class BrightDataSearchEngineComponent(Component):
         return str(self.query_input or "").strip()
 
     def search_web(self) -> Data:
-        """Search the web using Bright Data's search engine scraping"""
+        """Search the web using Bright Data's search engine scraping."""
         try:
             query = self.get_query_from_input()
 
@@ -93,7 +95,7 @@ class BrightDataSearchEngineComponent(Component):
 
             response = requests.post("https://api.brightdata.com/request", json=payload, headers=headers, timeout=120)
 
-            if response.status_code == 200:
+            if response.status_code == HTTP_OK:
                 results = response.text
                 return Data(
                     text=results,

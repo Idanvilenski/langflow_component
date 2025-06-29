@@ -1,11 +1,11 @@
 import { BotMessageSquareIcon } from "@/icons/BotMessageSquare";
+import { BrightDataIcon } from "@/icons/BrightData";
 import { GradientSave } from "@/icons/GradientSparkles";
 import { fontAwesomeIcons, isFontAwesomeIcon } from "@/icons/fontAwesomeIcons";
 import { TwitterLogoIcon } from "@radix-ui/react-icons";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { lazy } from "react";
 import { FaApple, FaDiscord, FaGithub } from "react-icons/fa";
-import { BrightDataIcon } from "@/icons/BrightData";
 
 const iconCache = new Map<string, any>();
 
@@ -144,7 +144,7 @@ export const nodeColorsName: { [char: string]: string } = {
   list: "lime",
   agents: "purple",
   BrightDataStructuredDataEnhancedComponent: "BrightData",
-  BrightDataSearchEngineComponent: "BrightData", 
+  BrightDataSearchEngineComponent: "BrightData",
   BrightDataWebScraperComponent: "BrightData",
   tools: "cyan",
   memories: "amber",

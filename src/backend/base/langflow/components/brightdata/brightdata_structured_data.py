@@ -821,8 +821,9 @@ class BrightDataStructuredDataEnhancedComponent(Component):
         elif "youtube.com" in domain:
             if dataset_name == "youtube_videos" and "/watch?v=" in url_lower:
                 bonus += 25
-            elif (dataset_name == "youtube_profiles" and
-                ("/channel/" in path or "/c/" in path or re.search(r"/@[^/]+/?$", path))):
+            elif dataset_name == "youtube_profiles" and (
+                "/channel/" in path or "/c/" in path or re.search(r"/@[^/]+/?$", path)
+            ):
                 bonus += 20
 
         # Instagram specific bonuses
@@ -831,8 +832,12 @@ class BrightDataStructuredDataEnhancedComponent(Component):
                 dataset_name == "instagram_reels" and "/reel/" in path
             ):
                 bonus += 20
-            elif (dataset_name == "instagram_profiles" and re.search(r"/[^/]+/?$", path) and
-                "/p/" not in path and "/reel/" not in path):
+            elif (
+                dataset_name == "instagram_profiles"
+                and re.search(r"/[^/]+/?$", path)
+                and "/p/" not in path
+                and "/reel/" not in path
+            ):
                 bonus += 15
 
         # TikTok specific bonuses

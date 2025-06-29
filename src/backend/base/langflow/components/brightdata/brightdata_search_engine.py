@@ -8,6 +8,8 @@ import urllib.parse
 
 
 class BrightDataSearchEngineComponent(Component):
+    """Search Google, Bing, or Yandex using Bright Data's search scraping service."""
+
     display_name = "Bright Data Search Engine"
     description = "Search Google, Bing, or Yandex using Bright Data's search scraping service"
     icon = "BrightData"

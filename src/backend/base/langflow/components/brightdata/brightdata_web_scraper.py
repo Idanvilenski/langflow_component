@@ -7,6 +7,8 @@ import requests
 
 
 class BrightDataWebScraperComponent(Component):
+    """Scrape the web with bot detection bypass and unlocking tools powered by Bright Data."""
+
     display_name = "Bright Data Web Scraper"
     description = "Scrape the web with bot detection bypass and unlocking tools powered by Bright Data"
     icon = "BrightData"

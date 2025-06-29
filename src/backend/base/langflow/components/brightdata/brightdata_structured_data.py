@@ -20,6 +20,8 @@ from typing import Dict, Tuple, Optional, Any, List, Union
 
 
 class BrightDataStructuredDataEnhancedComponent(Component):
+    """Extract structured data from 40+ real-time specialized datasets using AI-powered auto detection."""
+
     display_name: str = "Bright Data Structured Data"
     description: str = "Extract structured data from 40+ real-time specialized datasets using AI-powered auto detection"
     name = "BrightDataStructuredData"

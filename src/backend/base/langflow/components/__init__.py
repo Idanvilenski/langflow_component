@@ -8,7 +8,7 @@ from langflow.components.brightdata import (
 __all__ = [
     # ... existing components ...
     "BrightDataSearchEngineComponent",
-    "BrightDataStructuredDataEnhancedComponent", 
+    "BrightDataStructuredDataEnhancedComponent",
     "BrightDataWebScraperComponent",
     # ... rest of existing components ...
 ]
